@@ -4,6 +4,8 @@ A responsive web app to calculate SRM students' CGPA and internal marks. Built w
 
 A responsive web app built with **HTML**, **CSS**, **JavaScript**, and **Bootstrap 5** to help SRM students calculate their **semester GPA**, **cumulative CGPA**, and **internal marks** based on cycle test scores.
 
+🔗 **Live Website:** [s4i1m.github.io/SRM_CGPA_Internals](https://s4i1m.github.io/SRM_CGPA_Internals/)
+
 ## ✨ Features
 
 - 🎓 CGPA calculator with support for previous semesters
