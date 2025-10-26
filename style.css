@@ -1,0 +1,31 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+}
+
+a {
+  text-decoration: none;
+}
+body {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+.card {
+  background-color: #1c1c1c;
+  border: 1px solid #333;
+}
+
+.form-control,
+.form-select {
+  background-color: #2a2a2a;
+  color: #fff;
+  border: 1px solid #444;
+}
+
+.btn {
+  border: none;
+}
+
+a {
+  color: #00bfff;
+}
