@@ -152,4 +152,4 @@ from the presets. Open an issue with the split and it can be added.
 
 ## License
 
-[MIT](LICENSE) © [S4i1m](https://s4i1m.github.io/myportfolio/)
+[MIT](LICENSE) © [S4i1m](https://s4i1m.github.io/whoami/)
