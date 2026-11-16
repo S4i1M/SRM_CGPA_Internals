@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Grade Predictor — SRM</title>
+<meta name="description" content="Enter your SRM internal marks (out of 60 for the 2021 regulation, 50 for 2026) and see exactly how many marks you need in the end semester for O, A+ and every other grade.">
+<meta name="theme-color" content="#000000">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="has-mini">
+
+<header class="site-head">
+  <div class="inner">
+    <a class="brand" href="index.html">
+      <span class="mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 19V6"/><path d="M4 19h16"/><path d="M7.5 15l3.5-4.5 3 2.5L20 6"/>
+        </svg>
+      </span>
+      <span><b>SRM CGPA &amp; Internals</b><small>2021 · 2026 regulations</small></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="index.html">Home</a>
+      <a href="cgpa.html">CGPA</a>
+      <a href="internals.html">Internals</a>
+      <a href="grade-predictor.html">Grade predictor</a>
+    </nav>
+    <button class="theme-toggle" data-theme-toggle aria-label="Switch between dark and light mode">
+      <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.2 5.2l1.4 1.4M17.4 17.4l1.4 1.4M18.8 5.2l-1.4 1.4M6.6 17.4l-1.4 1.4"/>
+      </svg>
+      <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M20 14.5A8.5 8.5 0 019.5 4a8.5 8.5 0 1010.5 10.5z"/>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+    <div class="page-head">
+      <span class="eyebrow">Calculator 03</span>
+      <h1>Grade predictor</h1>
+      <p>Enter the internal marks you have so far. The answer is the marks you need in the end-semester paper — for O first, and for the next grade down if O has slipped away.</p>
+    </div>
+
+    <div class="grid grid-side">
+      <!-- inputs -->
+      <div class="grid" style="gap:18px">
+        <section class="card">
+          <div class="card-head">
+            <h2>Inputs</h2>
+            <span class="dim">saved as you type</span>
+          </div>
+
+          <div class="field">
+            <span class="label">Regulation</span>
+            <div class="segmented" id="regs" role="group" aria-label="Regulation">
+              <button data-reg="2021" aria-pressed="true">2021<span>internal 60 + end sem 40</span></button>
+              <button data-reg="2026" aria-pressed="false">2026<span>internal 50 + end sem 50</span></button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="iaInput">Internal marks obtained <span class="dim" id="iaHint"></span></label>
+            <div class="input-wrap input-lg">
+              <input id="iaInput" type="number" min="0" step="0.5" value="42" inputmode="decimal" autocomplete="off">
+              <span class="suffix" id="iaOf">/ 60</span>
+            </div>
+            <input type="range" id="iaRange" min="0" max="60" step="0.5" value="42" aria-label="Internal marks slider">
+          </div>
+
+          <div class="field">
+            <label for="paperInput">End semester paper is out of <span class="dim">(what you write)</span></label>
+            <div class="input-wrap">
+              <input id="paperInput" type="number" min="1" step="1" value="75" inputmode="numeric" autocomplete="off">
+              <span class="suffix">marks</span>
+            </div>
+            <div class="chips" id="paperChips" style="margin-top:9px">
+              <button class="chip" data-p="50" aria-pressed="false">50</button>
+              <button class="chip" data-p="75" aria-pressed="true">75</button>
+              <button class="chip" data-p="100" aria-pressed="false">100</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <span class="label">Aim for</span>
+            <div class="chips" id="gradeChips"></div>
+            <p class="hint" style="margin-top:8px">Auto picks the highest grade you can still reach — O first, then A+, then the next one down.</p>
+          </div>
+
+          <div class="field">
+            <label for="credits" style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap">
+              <span>Credits for this subject <span class="dim">(optional)</span></span>
+              <span id="gpOut" style="color:var(--accent)" class="mono"></span>
+            </label>
+            <div class="input-wrap">
+              <input id="credits" type="number" min="0" max="10" step="0.5" value="4" inputmode="decimal" autocomplete="off">
+              <span class="suffix">credits</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-head"><h2>Tip</h2></div>
+          <p class="hint">
+            Internal marks usually combine your cycle tests, assignment and attendance. If you only have raw cycle test
+            scores, run them through the <a class="linkish" href="internals.html">internal marks calculator</a> first —
+            it hands the total straight over to this page.
+          </p>
+        </section>
+      </div>
+
+      <!-- result -->
+      <div class="grid" style="gap:18px">
+        <section class="card result-card" id="answerCard" aria-live="polite">
+          <div class="card-head">
+            <h2>Result</h2>
+            <span class="verdict v-info" id="verdict">—</span>
+          </div>
+
+          <div class="bignum">
+            <b id="needNum">0</b><span id="needOf">/ 75</span><em id="needPct">0%</em>
+          </div>
+          <p class="lede" id="lede">—</p>
+          <p class="note" id="nextBest" hidden></p>
+
+          <div class="pbar">
+            <i class="got" id="barGot" style="width:42%"></i>
+            <i class="need" id="barNeed" style="width:28%"></i>
+          </div>
+          <div class="plegend">
+            <span>Internal secured <b id="lgGot" style="color:var(--text)">42</b></span>
+            <span>End sem needed <b id="lgNeed" style="color:var(--text)">26</b></span>
+            <span id="lgWeight">counts as <b style="color:var(--text)">0</b> of 40</span>
+          </div>
+
+          <div class="kpis" style="margin-top:18px">
+            <div class="kpi"><div class="k">Max possible</div><div class="v" id="maxTotal">100 <small>/ 100</small></div></div>
+            <div class="kpi"><div class="k">Best grade</div><div class="v" id="bestGrade">O <small>10 GP</small></div></div>
+            <div class="kpi"><div class="k">To just pass</div><div class="v" id="passNeed">8 <small>/ 75</small></div></div>
+          </div>
+
+          <div class="plan" id="gradePlan" role="list" aria-label="Marks needed for each grade"></div>
+        </section>
+
+        <section class="card">
+          <div class="card-head">
+            <h2>Grade-by-grade breakdown</h2>
+            <span class="dim" id="ladderNote"></span>
+          </div>
+          <div class="ladder" id="ladder"></div>
+
+          <div class="whatif">
+            <span class="label" style="margin-bottom:10px">What if I score…</span>
+            <div class="row">
+              <input type="range" id="whatRange" min="0" max="75" step="0.5" value="45" style="flex:1;min-width:150px" aria-label="Expected end semester score">
+              <b id="whatScore">45 / 75</b>
+              <span class="pill" id="whatGrade">—</span>
+            </div>
+            <p class="hint" style="margin-top:10px" id="whatLede">—</p>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-head"><h2>How this is worked out</h2></div>
+          <p class="hint">
+            <b>Weightage.</b> 2021 regulation theory courses are assessed <b>60% internal + 40% end semester</b>; 2026 regulation
+            courses are <b>50% internal + 50% end semester</b>.
+          </p>
+          <div class="divider"></div>
+          <p class="hint">
+            <b>Paper scaling.</b> Your paper is marked out of the total you enter (75 by default) and then scaled to its weight —
+            40 marks under 2021, 50 under 2026 — before it is added to your internals.
+          </p>
+          <div class="divider"></div>
+          <p class="hint">
+            <b>Grade bands</b> (same in both regulations): O 91–100 · A+ 81–90 · A 71–80 · B+ 61–70 · B 56–60 · C 50–55 · F below 50.
+          </p>
+          <div class="divider"></div>
+          <p class="hint">
+            <b>Passing.</b> A minimum of 50% of the total is required. Under the 2026 regulation you also need at least
+            <b>45% in the end-semester exam</b> itself — that is the stricter of the two numbers above.
+          </p>
+          <div class="divider"></div>
+          <p class="hint">
+            <b>The one caveat.</b> SRM normalises internal marks before combining them with the end-semester marks, and the exact
+            method is set by the Controller of Examinations. Treat this as a solid estimate of the marks you need, not a guarantee.
+          </p>
+          <p class="hint" style="margin-top:12px">
+            Sources:
+            <a class="linkish" href="https://webstor.srmist.edu.in/web_assets/downloads/2023/b-tech-mtech-ntegrated-2021-regulations.pdf" target="_blank" rel="noopener">SRM academic regulations 2021</a> ·
+            <a class="linkish" href="https://webstor.srmist.edu.in/web_assets/downloads/2026/srmist-fet-btech-mtech-integrated-regulations-2026.pdf" target="_blank" rel="noopener">SRM academic regulations 2026</a>.
+          </p>
+        </section>
+      </div>
+    </div>
+  </div>
+</main>
+
+<button class="mini" id="miniBar" aria-label="Jump to the result">
+  <span class="mg" id="miniGrade">—</span>
+  <span class="mt" id="miniText">—</span>
+  <span class="mv">View →</span>
+</button>
+
+<footer class="site-foot">
+  <div class="inner">
+    <div>Made by <a href="https://s4i1m.github.io/myportfolio/" target="_blank" rel="noopener">S4i1m</a> · <span data-year>2026</span> · MIT licensed</div>
+    <div class="links">
+      <a href="index.html">Home</a>
+      <a href="cgpa.html">CGPA</a>
+      <a href="internals.html">Internals</a>
+      <a href="https://github.com/S4i1M/SRM_CGPA_Internals" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/app.js"></script>
+<script src="assets/js/predictor.js"></script>
+</body>
+</html>
