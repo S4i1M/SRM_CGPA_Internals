@@ -1,0 +1,5 @@
+# SRM CGPA & Internals
+User-agent: *
+Allow: /
+
+Sitemap: https://s4i1m.github.io/SRM_CGPA_Internals/sitemap.xml
